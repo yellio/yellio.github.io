@@ -1,6 +1,6 @@
 angular.module('yellio').factory('socket', function($rootScope) {
   var socket;
-  socket = io.connect('192.168.1.3:3000');
+  socket = io.connect('http://yellio.herokuapp.com:3000');
   return {
     on: function(event, cb) {
       return socket.on(event, function() {
