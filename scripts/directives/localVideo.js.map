@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "localVideo.js",
+  "sourceRoot": "",
+  "sources": [
+    "localVideo.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA,OAAO,CAAC,MAAR,CAAe,QAAf,CACE,CAAC,SADH,CACa,YADb,EAC2B,SAAC,KAAD,EAAQ,IAAR,GAAA;SACvB;AAAA,IAAA,WAAA,EAAa,2BAAb;AAAA,IACA,QAAA,EAAU,GADV;AAAA,IAEA,IAAA,EAAM,SAAC,KAAD,EAAQ,OAAR,EAAiB,KAAjB,GAAA,CAFN;IADuB;AAAA,CAD3B,CAAA,CAAA"
+}

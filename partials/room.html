@@ -1,0 +1,23 @@
+<a ng-href="#">home</a>
+<h1>Room {{roomName}}</h1>
+<h2>your name: {{user.name}}</h2>
+<form name="loginForm" ng-show="formShown" ng-submit="joinRoom()">
+  <label>name</label>
+  <input type="text" ng-model="username" ng-pattern="/^\s*\w*\s*$/" required="required" name="username"/><span ng-show="loginForm.username.$error.required" class="error">Required!</span><span ng-show="loginForm.username.$error.pattern" class="error">Single word only!</span>
+</form>
+<local-video></local-video>
+<h2>Videos:</h2>
+<div ng-repeat="videoSrc in videos">
+  <p>{{videoSrc}}</p>
+  <video autoplay="autoplay" ng-src="{{videoSrc}}"></video>
+</div>
+<h2>Users:</h2>
+<ul>
+  <li ng-repeat="(user, res) in room">
+    <p>{{user}}</p>
+  </li>
+</ul>
+<h2>messages:</h2>
+<div ng-repeat="message in messages">
+  <p>{{message}}</p>
+</div>

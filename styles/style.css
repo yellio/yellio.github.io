@@ -1,0 +1,18 @@
+@font-face {
+  font-family: HelveticaNeue;
+  src: url("../fonts/HelveticaNeue-Light.otf");
+}
+body {
+  font-family: HelveticaNeue;
+}
+.error {
+  color: #f00;
+}
+video.local {
+  width: 200px;
+  height: 200px;
+  float: right;
+}
+video {
+  align: center;
+}
