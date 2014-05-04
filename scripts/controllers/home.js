@@ -1,5 +1,5 @@
-angular.module('yellio').controller('HomeCtrl', function($scope, socket) {
-  return socket.on('availiable rooms', function(rooms) {
+angular.module('yellio').controller('HomeCtrl', function($scope, socket, $location) {
+  socket.on('availiable rooms', function(rooms) {
     var name, users;
     return $scope.rooms = (function() {
       var _results;
@@ -14,6 +14,9 @@ angular.module('yellio').controller('HomeCtrl', function($scope, socket) {
       return _results;
     })();
   });
+  return $scope.createRoom = function() {
+    return $location.path('/r/' + $scope.roomName);
+  };
 });
 
 /*
