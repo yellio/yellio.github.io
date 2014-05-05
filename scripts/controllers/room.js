@@ -18,24 +18,19 @@ angular.module('yellio').controller('RoomCtrl', function($scope, $routeParams, s
       $scope.user.name = $scope.username;
       return socket.emit('join room', {
         name: $scope.user.name,
-        room: $scope.roomName,
-        description: 'desc'
+        room: $scope.roomName
       });
     }
   };
   socket.on('room info', function(room) {
-    var numberOfUsers;
-    $scope.room = room;
-    numberOfUsers = Object.keys(room).length;
-    if (numberOfUsers > 1) {
-      return rtc.initiateCall();
-    }
+    return $scope.room = room;
   });
   socket.on('user joined', function(user) {
-    return $scope.room[user.name] = user.resources;
+    $scope.room[user.name] = user.id;
+    return rtc.initiateCall(user.name);
   });
-  socket.on('user disconnected', function(username) {
-    return delete $scope.room[username];
+  socket.on('user disconnected', function(name) {
+    return delete $scope.room[name];
   });
   rtc.onCall = rtc.acceptCall;
   return rtc.onCallStarted = function(videoUrl) {

@@ -1,6 +1,7 @@
 angular.module('yellio').service('rtc', function($sce, socket) {
-  var PeerConnection, RTCIceCandidate, SessionDescription, pc, self;
+  var Peer, PeerConnection, RTCIceCandidate, SessionDescription, localStream, self;
   self = this;
+  localStream = {};
   PeerConnection = window.RTCPeerConnection || window.mozRTCPeerConnection || window.webkitRTCPeerConnection;
   SessionDescription = window.RTCSessionDescription || window.mozRTCSessionDescription || window.webkitRTCSessionDescription;
   RTCIceCandidate = window.mozRTCIceCandidate || window.webkitRTCIceCandidate || window.RTCIceCandidate;
@@ -20,55 +21,83 @@ angular.module('yellio').service('rtc', function($sce, socket) {
     };
     return navigator.getUserMedia(resources, successCallback, errorCallback);
   };
-  pc = new PeerConnection({
-    iceServers: [
-      {
-        url: "stun:stun.l.google.com:19302"
-      }
-    ]
-  });
-  pc.onicecandidate = function(event) {
-    var candidate;
-    if (!pc || !event || !event.candidate) {
-      return;
+  Peer = (function() {
+    function Peer(username) {
+      this.username = username;
+      this.pc = new PeerConnection({
+        iceServers: [
+          {
+            url: "stun:stun.l.google.com:19302"
+          }
+        ]
+      });
+      this.pc.addStream(localStream);
+      this.pc.onicecandidate = (function(event) {
+        var candidate;
+        if (!this.pc || !event || !event.candidate) {
+          return;
+        }
+        candidate = event.candidate;
+        return socket.emit('send candidate', {
+          candidate: candidate,
+          username: this.username
+        });
+      }).bind(this);
+      socket.on('ice candidate', (function(candidate) {
+        return this.pc.addIceCandidate(new RTCIceCandidate(candidate));
+      }).bind(this));
+      socket.on('call accepted', (function(desc) {
+        return this.pc.setRemoteDescription(new RTCSessionDescription(desc));
+      }).bind(this));
+      this.pc.onaddstream = (function(event) {
+        if (!event) {
+          return;
+        }
+        return self.onCallStarted(self.getStreamUrl(event.stream));
+      }).bind(this);
     }
-    candidate = event.candidate;
-    return socket.emit('send candidate', candidate);
-  };
-  socket.on('ice candidate', function(candidate) {
-    return pc.addIceCandidate(new RTCIceCandidate(candidate));
+
+    Peer.prototype.call = function() {
+      return this.pc.createOffer((function(desc) {
+        this.pc.setLocalDescription(desc);
+        return socket.emit('call request', {
+          desc: desc,
+          username: this.username
+        });
+      }).bind(this));
+    };
+
+    Peer.prototype.answer = function(offerDesc) {
+      this.pc.setRemoteDescription(new SessionDescription(offerDesc));
+      return this.pc.createAnswer((function(desc) {
+        this.pc.setLocalDescription(desc);
+        return socket.emit('call accept', {
+          desc: desc,
+          username: this.username
+        });
+      }).bind(this));
+    };
+
+    return Peer;
+
+  })();
+  socket.on('incoming call', function(data) {
+    return self.onCall(data);
   });
-  socket.on('incoming call', function(desc) {
-    return self.onCall(desc);
-  });
-  socket.on('call accepted', function(desc) {
-    return pc.setRemoteDescription(new RTCSessionDescription(desc));
-  });
-  pc.onaddstream = function(event) {
-    if (!event) {
-      return;
-    }
-    return self.onCallStarted(self.getStreamUrl(event.stream));
+  this.acceptCall = function(offer) {
+    var peer;
+    peer = new Peer(offer.username);
+    return peer.answer(offer.desc);
   };
-  this.acceptCall = function(offerDesc) {
-    pc.setRemoteDescription(new SessionDescription(offerDesc));
-    return pc.createAnswer(function(desc) {
-      pc.setLocalDescription(desc);
-      return socket.emit('call accept', desc);
-    });
-  };
-  this.initiateCall = function() {
-    return pc.createOffer(function(desc) {
-      pc.setLocalDescription(desc);
-      return socket.emit('call request', desc);
-    });
+  this.initiateCall = function(username) {
+    var peer;
+    peer = new Peer(username);
+    return peer.call();
   };
   this.onCall = function() {};
   this.onHang = function() {};
   this.onCallStarted = function() {};
-  this.rejectCall = function() {
-    return alert('call rejected');
-  };
+  this.rejectCall = function() {};
   this.prepareToCall = function(cb) {
     return self.getLocalMediaStream({
       audio: true,
@@ -77,8 +106,8 @@ angular.module('yellio').service('rtc', function($sce, socket) {
       if (err) {
         cb(err);
       }
-      pc.addStream(stream);
-      return cb(null, self.getStreamUrl(stream));
+      localStream = stream;
+      return cb(null, self.getStreamUrl(localStream));
     });
   };
   return this;
