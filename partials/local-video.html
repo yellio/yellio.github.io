@@ -1,2 +1,7 @@
 
-<video autoplay="autoplay" muted="muted" ng-src="{{videoSrc}}" class="local"></video>
+<div class="flipper">
+  <video autoplay="autoplay" muted="muted" ng-src="{{videoSrc}}" class="front"></video>
+  <div class="back">
+    <button ng-click="shareScreen()">share screen</button>
+  </div>
+</div>

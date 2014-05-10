@@ -3,7 +3,8 @@ angular.module('yellio').directive('localVideo', function() {
     templateUrl: 'partials/local-video.html',
     restrict: 'AE',
     scope: {
-      videoSrc: '=source'
+      videoSrc: '=source',
+      shareScreen: '&sharescreen'
     }
   };
 });

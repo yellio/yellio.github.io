@@ -1,15 +1,18 @@
 angular.module('yellio').controller('RoomCtrl', function($scope, $routeParams, socket, rtc, $sce) {
   $scope.cameraError = false;
-  $scope.localVideoSrc = '';
   $scope.user = {};
   $scope.remoteVideos = {};
+  $scope.remoteScreens = {};
   $scope.roomName = $routeParams.name;
-  rtc.prepareToCall(function(err, localVideoUrl) {
+  $scope.$on('$destroy', function() {
+    return socket.emit('leave room');
+  });
+  rtc.getWebcamStream(function(err, webcamStream) {
     return $scope.$apply(function() {
       if (err) {
         return $scope.cameraError = true;
       } else {
-        return $scope.localVideoSrc = localVideoUrl;
+        return $scope.localVideoSrc = rtc.getStreamUrl(webcamStream);
       }
     });
   });
@@ -31,14 +34,25 @@ angular.module('yellio').controller('RoomCtrl', function($scope, $routeParams, s
   });
   socket.on('user disconnected', function(username) {
     delete $scope.room[username];
-    return delete $scope.remoteVideos[username];
+    delete $scope.remoteVideos[username];
+    return delete $scope.remoteScreens[username];
   });
   rtc.onCall = rtc.acceptCall;
-  return rtc.onCallStarted = function(callData) {
+  rtc.onCallStarted = function(callData) {
     var url;
     url = rtc.getStreamUrl(callData.stream);
-    return $scope.remoteVideos[callData.username] = url;
+    return $scope.$apply(function() {
+      return $scope.remoteVideos[callData.username] = url;
+    });
   };
+  rtc.onScreenShare = function(data) {
+    var url;
+    url = rtc.getStreamUrl(data.stream);
+    return $scope.$apply(function() {
+      return $scope.remoteScreens[data.username] = url;
+    });
+  };
+  return $scope.shareScreen = rtc.shareScreen;
 });
 
 /*
