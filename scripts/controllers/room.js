@@ -2,7 +2,7 @@ angular.module('yellio').controller('RoomCtrl', function($scope, $routeParams, s
   $scope.cameraError = false;
   $scope.localVideoSrc = '';
   $scope.user = {};
-  $scope.remoteVideos = [];
+  $scope.remoteVideos = {};
   $scope.roomName = $routeParams.name;
   rtc.prepareToCall(function(err, localVideoUrl) {
     return $scope.$apply(function() {
@@ -29,12 +29,15 @@ angular.module('yellio').controller('RoomCtrl', function($scope, $routeParams, s
     $scope.room[user.name] = user.id;
     return rtc.initiateCall(user.name);
   });
-  socket.on('user disconnected', function(name) {
-    return delete $scope.room[name];
+  socket.on('user disconnected', function(username) {
+    delete $scope.room[username];
+    return delete $scope.remoteVideos[username];
   });
   rtc.onCall = rtc.acceptCall;
-  return rtc.onCallStarted = function(videoUrl) {
-    return $scope.remoteVideos.push(videoUrl);
+  return rtc.onCallStarted = function(callData) {
+    var url;
+    url = rtc.getStreamUrl(callData.stream);
+    return $scope.remoteVideos[callData.username] = url;
   };
 });
 

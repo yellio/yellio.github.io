@@ -1,5 +1,0 @@
-
-
-/*
-//# sourceMappingURL=ngRTC.js.map
-*/

@@ -53,7 +53,10 @@ angular.module('yellio').service('rtc', function($sce, socket) {
         if (!event) {
           return;
         }
-        return self.onCallStarted(self.getStreamUrl(event.stream));
+        return self.onCallStarted({
+          stream: event.stream,
+          username: this.username
+        });
       }).bind(this);
     }
 

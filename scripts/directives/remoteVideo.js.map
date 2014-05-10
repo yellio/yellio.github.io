@@ -1,0 +1,10 @@
+{
+  "version": 3,
+  "file": "remoteVideo.js",
+  "sourceRoot": "",
+  "sources": [
+    "remoteVideo.coffee"
+  ],
+  "names": [],
+  "mappings": "AAAA,OAAO,CAAC,MAAR,CAAe,QAAf,CACE,CAAC,SADH,CACa,aADb,EAC4B,SAAA,GAAA;SACxB;AAAA,IAAA,WAAA,EAAa,4BAAb;AAAA,IACA,QAAA,EAAU,IADV;AAAA,IAEA,KAAA,EACE;AAAA,MAAA,QAAA,EAAU,SAAV;KAHF;IADwB;AAAA,CAD5B,CAAA,CAAA"
+}
