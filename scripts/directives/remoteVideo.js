@@ -4,6 +4,12 @@ angular.module('yellio').directive('remoteVideo', function() {
     restrict: 'AE',
     scope: {
       videoSrc: '=source'
+    },
+    link: function(scope, elem, attrs) {
+      scope.fullScreen = false;
+      return scope.toggleFullScreen = function() {
+        return scope.fullScreen = scope.fullScreen ? false : true;
+      };
     }
   };
 });

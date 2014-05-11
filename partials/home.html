@@ -4,7 +4,7 @@
   <h2>create a room</h2>
   <form name="createRoomForm" ng-submit="createRoom()">
     <label>name</label>
-    <input type="text" ng-model="roomName" ng-pattern="/^\s*\w*\s*$/" autofocus="autofocus" required="required" name="roomName" ng-class="{error: createRoomForm.$error.pattern}"/><span ng-show="createRoomForm.$error.pattern" class="error">Single word only!</span>
+    <input type="text" ng-model="roomName" ng-pattern="/^\s*\w*\s*$/" autofocus="autofocus" required="required" name="roomName" ng-class="{error: createRoomForm.$error.pattern}"/><br/><span ng-show="createRoomForm.$error.pattern" class="error">Single word only!</span>
     <button ng-show="createRoomForm.$valid">create</button>
   </form>
   <h2 ng-show="rooms">or join one:</h2>

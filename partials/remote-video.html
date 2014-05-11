@@ -1,2 +1,2 @@
 
-<video autoplay="autoplay" ng-src="{{videoSrc}}" class="remote"></video>
+<video autoplay="autoplay" ng-class="{fullscreen: fullScreen}" ng-click="toggleFullScreen()" ng-src="{{videoSrc}}" ng-show="!(this.readyState &lt;= HTMLMediaElement.HAVE_CURRENT_DATA || this.paused || this.currentTime &lt;= 0)" class="remote"></video>
