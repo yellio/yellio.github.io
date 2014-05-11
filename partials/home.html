@@ -1,12 +1,14 @@
 
-<h1>Yell.io</h1>
-<h2>Chreate room</h2>
-<form name="createRoomForm" ng-submit="createRoom()">
-  <label>name</label>
-  <input type="text" ng-model="roomName" ng-pattern="/^\s*\w*\s*$/" required="required" name="roomName"/><span ng-show="createRoomForm.$error.required" class="error">Required!</span><span ng-show="createRoomForm.$error.pattern" class="error">Single word only!</span>
-  <button ng-show="createRoomForm.$valid">create</button>
-</form>
-<h2 ng-show="rooms">Join room:</h2>
-<ul>
-  <li ng-repeat="room in rooms"><a ng-href="#/r/{{room.name}}">{{room.name}} : {{room.numberOfUsers}}</a></li>
-</ul>
+<h1 class="logo center">Yell.io</h1>
+<div class="center">
+  <h2>create a room</h2>
+  <form name="createRoomForm" ng-submit="createRoom()">
+    <label>name</label>
+    <input type="text" ng-model="roomName" ng-pattern="/^\s*\w*\s*$/" autofocus="autofocus" required="required" name="roomName" ng-class="{error: createRoomForm.$error.pattern}"/><span ng-show="createRoomForm.$error.pattern" class="error">Single word only!</span>
+    <button ng-show="createRoomForm.$valid">create</button>
+  </form>
+  <h2 ng-show="rooms">or join one:</h2>
+  <ul>
+    <li ng-repeat="room in rooms"><a ng-href="#/r/{{room.name}}">{{room.name}} : {{room.numberOfUsers}}</a></li>
+  </ul>
+</div>

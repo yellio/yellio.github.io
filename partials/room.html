@@ -3,11 +3,10 @@
 <h1 ng-show="cameraError" class="error">Can't get access to your webcam! Refresh the page and garant access to your webcam</h1>
 <div ng-show="localVideoSrc &amp;&amp; !cameraError"><a ng-href="#">home</a>
   <h1>Room {{roomName}}</h1>
-  <h2>your name: {{user.name}}</h2>
-  <form name="loginForm" ng-show="!user.name" ng-submit="joinRoom()">
+  <form name="loginForm" ng-show="!user.name" ng-submit="joinRoom()" class="center">
     <label>name</label>
     <input type="text" ng-model="username" ng-pattern="/^\s*\w*\s*$/" required="required" name="username"/><span ng-show="loginForm.username.$error.required" class="error">Required!</span><span ng-show="loginForm.username.$error.pattern" class="error">Single word only!</span>
-    <button ng-show="loginForm.$valid">Join!</button>
+    <button ng-show="loginForm.$valid">join!</button>
   </form>
   <local-video source="localVideoSrc" sharescreen="shareScreen()"></local-video>
   <div ng-repeat="(name, url) in remoteVideos">
